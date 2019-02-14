@@ -3,7 +3,7 @@
 # AzureError
 #     |- AzureLibraryError
 #         |- AzureLibraryRequestError
-#             |- AzureLibraryResponseError
+#         |- AzureLibraryResponseError
 #     |- ServiceRequestError
 #         |- ConnectionTimeoutError
 #         |- ServiceHttpRequestError
@@ -11,7 +11,7 @@
 #             |- ClientAuthenticationError
 #             |- ConflictError
 #             |- PreconditionFailedError
-#                 |- ResourceAlreadyExistsError
+#                 |- ResourceExistsError
 #                 |- ResourceModifiedError
 #             |- ServerError
 #             |- TooManyRedirectsError
@@ -84,7 +84,7 @@ class PreconditionFailedError(ServiceHttpRequestError):
   """
   pass
 
-class ResourceAlreadyExistsError(PreconditionFailedError):
+class ResourceExistsError(PreconditionFailedError):
   """ A service request failed with a 412 error due to a resource already existing.
 
   The client sent an if-none-match: '*' precondition in the request, and the precondition failed.
