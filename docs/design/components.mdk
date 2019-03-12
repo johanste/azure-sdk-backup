@@ -34,3 +34,7 @@ Todo {
 Example {
   before:"<a class='req-label' href='#&id;'>Ex</a>";
 }
+
+Draft {
+  before:"<p class='draft-header'>DRAFT</p>";
+}
