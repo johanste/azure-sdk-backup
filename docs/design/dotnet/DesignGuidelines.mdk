@@ -2,7 +2,7 @@
 
 Currently, the document describes guidelines for .NET APIs exposing HTTP/REST services. It might be expanded in the future to cover other, non-REST, services. 
 
-To illustrate various design concepts, we will be using Azure Application Configuration service in code examples. You can find sources for this component [here](https://github.com/Azure/azure-sdk-for-net-lab/tree/master/Configuration). The Azure.ApplicationModel.Configuration component can serve as an illustration of what we expect a great Azure SDK component for .NET to look like.
+To illustrate various design concepts, we will be using Azure Application Configuration service in code examples. You can find sources for this component [here](https://github.com/Azure/azure-sdk-for-net/tree/master/src/SDKs/Azure.ApplicationModel.Configuration/data-plane). The Azure.ApplicationModel.Configuration component can serve as an illustration of what we expect a great Azure SDK component for .NET to look like.
 
 ## General Guidelines
 
@@ -287,10 +287,10 @@ place small related components in similar lifecycle stages (i.e. evolving togeth
 ~
 
 ~ Must {#dotnet-packaging-ns}
-build all components for .NET Standard 2.0 and .NET 4.6.
+build all components for .NET Standard 2.0 and .NET 4.6.1.
 This can be acomplished by the following target setting in the csproj file:
 ```
-<TargetFramework>netstandard2.0;net46</TargetFramework>
+<TargetFramework>netstandard2.0;net461</TargetFramework>
 ```
 ~
 
@@ -310,7 +310,7 @@ have dependencies on any NuGet packages besides:
 In the past, a very common external dependency was JSON.NET package. To avoid this dependency, 
 we recommend [System.Text.Json](https://github.com/dotnet/corefx/tree/master/src/System.Text.Json/source_package) 
 package that is now a part of the .NET platform. 
-In particular, the source version of the package which allows for maximum reach.
+In particular, the source version of the package which allows for maximum reach, i.e. will run on many olders versions of .NET Framework and .NET Core.
 ~
 
 ~ MustNot {#dotnet-packaging-ns}
@@ -325,7 +325,7 @@ See [.NET Breaking Changes](https://github.com/dotnet/corefx/blob/master/Documen
 ~
 
 ~ Must {#dotnet-service-version-default}
-call a highest supported service API version by default.
+call the highest supported service API version by default.
 ~
 
 ~ Must {#dotnet-service-version-option}
@@ -334,6 +334,9 @@ allow changing to an older supported service API versions when instantiating ser
 
 ~ Must {#dotnet-package-sxs}
 introduce a new package, with new assembly names, new namespace names, and new type names if you must do a breaking change. This should happen very rarely, if ever. 
+
+Register all such new packages with *adparch@microsoft.com*,
+i.e. send email about your proposed package to this address to start a discussion.
 ~
 
 ~ Must {#dotnet-tester-doer}
@@ -355,8 +358,9 @@ else {
 ~
 ## Repository Guidelines
 
-~ Must 
+~ Must {#dotnet-follow-oss-guidelines}
 follow general [Azure SDK open source guidelines](#general-oss).
+~
 
 ~ Must {#dotnet-repository}
 have samples, readme, and prescribed folder structure. The README.md file must be in the component's root folder. 
@@ -365,7 +369,7 @@ have samples, readme, and prescribed folder structure. The README.md file must b
 ~ Must {#dotnet-samples-hello_world}
 have a sample file called ```S1_HelloWorld.cs```. All other samples are ordered from simplest to most complex using ```S<number>_``` prefix.
 
-See [Configuration Service Hello World](https://github.com/Azure/azure-sdk-for-net-lab/blob/master/Configuration/Azure.Configuration.Test/samples/Sample1_HelloWorld.cs#L16) sample.
+See [Configuration Service Hello World](https://github.com/Azure/azure-sdk-for-net/blob/master/src/SDKs/Azure.ApplicationModel.Configuration/data-plane/Azure.Configuration.Tests/samples/Sample1_HelloWorld.cs#L16) sample.
 ~
 
 ~ Must {#dotnet-samples}
@@ -495,11 +499,11 @@ This allows callers to avoid large number of GC heap allocations. ```Response<T>
 Some .NET Design Guidelines have been notoriously overlooked in existing Azure SDKs. This section serves as a way to highlight these guidelines.
 
 ~ MustNot {#dotnet-no-abstractions}
-have abstractions (interfaces of abstract classes) unless types both implement and consume them (i.e. you have parameters typed as the abstraction).
+have abstractions (interfaces or abstract classes) unless types both implement and consume them (i.e. you have parameters typed as the abstraction).
 ~
 
 ~ MustNot {#dotnet-no-interfaces-for-abstract-classes}
-use interfaces if you can use abstract classes. The only reasons to use an interface are: a) you need to “multiple-inherit”, b) you want structs to implement and abstraction.
+use interfaces if you can use abstract classes. The only reasons to use an interface are: a) you need to “multiple-inherit”, b) you want structs to implement an abstraction.
 ~
 
 ~ MustNot {#dotnet-no-generic-terms}
